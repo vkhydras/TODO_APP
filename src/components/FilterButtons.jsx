@@ -1,0 +1,53 @@
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { filterTodos, markAllCompleted } from '../redux/actions';
+
+class FilterButtons extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      currentFilter: props.filter,
+    };
+  }
+
+  handleFilter = (filter) => {
+    this.setState({ currentFilter: filter });
+    this.props.filterTodos(filter);
+  }
+
+  render() {
+    const { currentFilter } = this.state;
+
+    return (
+      <div className="flex space-x-4 items-center">
+        <select
+          className="text-sm px-2 py-1 rounded border border-gray-300 focus:outline-none"
+          value={currentFilter}
+          onChange={(e) => this.handleFilter(e.target.value)}
+        >
+          <option value="ALL">Default</option>
+          <option value="COMPLETED">Completed</option>
+          <option value="INCOMPLETE">Incomplete</option>
+        </select>
+
+        <button
+          className="text-sm px-2 py-1 bg-blue-500 text-white rounded ml-2" 
+          onClick={() => this.props.markAllCompleted()}
+        >
+          Mark All Completed
+        </button>
+      </div>
+    );
+  }
+}
+
+const mapStateToProps = (state) => ({
+  filter: state.filter,
+});
+
+const mapDispatchToProps = {
+  filterTodos,
+  markAllCompleted,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(FilterButtons);
